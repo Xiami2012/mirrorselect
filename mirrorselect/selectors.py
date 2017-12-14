@@ -53,6 +53,7 @@ else:
 	HTTPError = urllib2.HTTPError
 	import httplib
 	IncompleteRead = httplib.IncompleteRead
+from ssl import CertificateError
 
 
 from mirrorselect.output import encoder, get_encoding, decode_selection
@@ -387,7 +388,7 @@ class Deep(object):
 			finally:
 				signal.alarm(0)
 
-		except EnvironmentError as e:
+		except (EnvironmentError, CertificateError) as e:
 			self.output.write(('\ndeeptime(): download from host %s '
 				'failed for ip %s: %s\n') % (url_parts.hostname, ip, e), 2)
 			return (None, True)
@@ -430,7 +431,7 @@ class Deep(object):
 			if len(ips) == 1:
 				test_url = url_unparse(url_parts)
 				return self._test_connection(test_url, url_parts, ip, [])
-		except EnvironmentError as e:
+		except (EnvironmentError, CertificateError) as e:
 			self.output.write('deeptime(): connection to host %s '
 				'failed for ip %s:\n            %s\n'
 				% (url_parts.hostname, ip, e), 2)
