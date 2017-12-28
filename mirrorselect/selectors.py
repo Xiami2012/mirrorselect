@@ -330,6 +330,10 @@ class Deep(object):
 		delta = 0
 		f = None
 
+		if url_parts.scheme == "https":
+			# ips don't work because the hostname must match the cert
+			ips = [url_parts.hostname]
+
 		for ip in ips:
 			test_parts = url_parts._replace(netloc=ip)
 			test_url = url_unparse(test_parts)
